@@ -1,0 +1,14 @@
+{
+  "name": "battery-status-monitor",
+  "version": "1.0.0",
+  "description": "A battery status monitor API",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase": "^8.0.0",
+    "mongoose": "^5.10.10"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
