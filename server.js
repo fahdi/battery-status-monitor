@@ -1,27 +1,42 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
+const express = require("express");
+const mongoose = require("mongoose");
 
-const BatterySchema = new mongoose.Schema({
-  charging: { type: Boolean, required: true },
-  timestamp: { type: Date, default: Date.now }
+// Connect to MongoDB
+mongoose.connect("mongodb://localhost:27017/battery", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
-const Battery = mongoose.model('Battery', BatterySchema);
-
-router.post('/battery', async (req, res) => {
-  const { charging } = req.body;
-
-  const battery = new Battery({
-    charging
-  });
-
-  try {
-    await battery.save();
-    res.status(201).send('Battery status saved successfully');
-  } catch (err) {
-    res.status(400).send(err.message);
+const batterySchema = new mongoose.Schema({
+  charging: {
+    type: Boolean,
+    required: true
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now
   }
 });
 
-module.exports = router;
+const Battery = mongoose.model("Battery", batterySchema);
+
+const app = express();
+
+app.use(express.json());
+
+app.post("/battery", async (req, res) => {
+  const battery = new Battery({
+    charging: req.body.charging
+  });
+
+  try {
+    const savedBattery = await battery.save();
+    res.status(201).send(savedBattery);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+app.listen(3000, () => {
+  console.log("Battery status monitor API running on port 3000");
+});
