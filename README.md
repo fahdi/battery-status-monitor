@@ -31,7 +31,7 @@ npm install
 npm start
 ```
 
-The API will be available at `http://localhost:3000/battery`.
+The API will be available at `http://localhost:3500/battery`.
 
 ## Endpoints
 
