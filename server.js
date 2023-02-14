@@ -1,8 +1,8 @@
 const express  = require('express');
 const mongoose = require('mongoose');
 const firebase = require('firebase');
-const jsonParser = require('json-parser');
-const PORT = 3500;
+const cors     = require('cors');
+const PORT     = 3500;
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/battery-status', {
@@ -35,11 +35,11 @@ const Battery = mongoose.model('Battery', batterySchema);
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json(), cors());
 
 app.post('/battery', async (req, res) => {
 
-  let statusMongoDb = false;
+  let statusMongoDb  = false;
   let statusFirebase = true;
   const battery      = new Battery({
     charging: req.body.charging,
@@ -65,7 +65,8 @@ app.post('/battery', async (req, res) => {
   // }
   if (statusMongoDb && statusFirebase) {
     res.status(201).send({'updated': true});
-  } else {
+  }
+  else {
     res.status(500).send({'500': true});
   }
 
@@ -74,7 +75,6 @@ app.post('/battery', async (req, res) => {
 app.get('/status', async (req, res) => {
   res.status(201).send({'up': true});
 });
-
 
 app.listen(PORT, () => {
   console.log('Battery status monitor API running on port ' + PORT);

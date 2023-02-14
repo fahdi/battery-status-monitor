@@ -65,11 +65,13 @@ navigator.getBattery().then((battery) => {
       : ((chargingIcon.style.display = "none"),
         (otherInfo.style.display = "inline-flex"),
         (chargingBar.style.animationIterationCount = "initial"));
+
+    callSever(battery.charging);
   }
 
   //   updating the Discharging Information
 
-  function updateDischargingInfo() {
+  function updateDischargingInfo(charging) {
     const dischargeTime = parseInt(battery.dischargingTime / 60) ? true : false;
 
     dischargeTime
@@ -78,5 +80,28 @@ navigator.getBattery().then((battery) => {
         )} minutes`),
         (otherInfo.style.display = "flex"))
       : (otherInfo.style.display = "none");
+  }
+
+  function callSever(charging){
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      "charging": charging
+    });
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    fetch("http://localhost:3500/battery", requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+
+    return {'db_save': true};
   }
 });
