@@ -67,7 +67,7 @@ body {
 
   z-index: 9;
 
-  animation: animate 2s linear;
+  animation: animate 4s linear;
 }
 
 /* the charging animation from the left */
